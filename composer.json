@@ -1,0 +1,28 @@
+{
+    "name": "codesaur/localization",
+    "description": "An elegant object-oriented application development framework component for PHP 7.2 or newer",
+    "keywords": [
+        "localization", "countries", "language", "translation",
+        "mongol", "mongolia", "mongolian", "монгол",
+        "codesaur", "narankhuu", "coden", "кодзавр", "наранхүү", "коден",
+        "ololt", "ололт", "мөнхийн", "мөнхийн-ололт", "мөнхийн ололт", "munkhiin ololt"
+    ],
+    "homepage": "https://ololt.mn/codesaur",
+    "authors": [
+        {
+            "name": "Narankhuu",
+            "email": "codesaur@gmail.com",
+            "homepage": "https://ololt.mn/narankhuu"
+        }
+    ],
+    "require": {
+        "codesaur/dataobject": ">=2.1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "codesaur\\Localization\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
+}
