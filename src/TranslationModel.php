@@ -10,9 +10,9 @@ use codesaur\DataObject\MultiModel;
 
 class TranslationModel extends MultiModel
 {
-    function __construct(PDO $conn)
+    function __construct(PDO $pdo)
     {
-        parent::__construct($conn);
+        parent::__construct($pdo);
         
         $account_table = getenv('CODESAUR_ACCOUNT_TABLE', true);
         if (!$account_table) {
