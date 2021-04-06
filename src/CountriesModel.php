@@ -37,25 +37,25 @@ class CountriesModel extends MultiModel
         $this->setTable('countries');
     }
     
-    public function retrieve(string $code = null): array
+    public function retrieve(?string $code = null): array
     {
         $codeName = $this->getCodeColumn()->getName();
         
         $countries = array();
-        if (isset($code)) {
+        if (empty($code)) {
+            $stmt = $this->select(
+                    "p.id as id, c.$codeName as $codeName, c.title as title",
+                    array('WHERE' => 'p.is_active=1', 'ORDER BY' => 'p.id'));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $countries[$row['id']][$row[$codeName]] = $row['title'];
+            }
+        } else {
             $code = preg_replace('/[^A-Za-z]/', '', $code);
             $stmt = $this->select("p.id as id, c.$codeName as $codeName, c.title as title", array(
                 'WHERE' => "c.$codeName=:$codeName AND p.is_active=1", 'ORDER BY' => 'p.id', 'VALUES' => [$codeName => $code]
             ));            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $countries[$row['id']] = $row['title'];
-            }
-        } else {
-            $stmt = $this->select(
-                    "p.id as id, c.$codeName as $codeName, c.title as title",
-                    array('WHERE' => 'p.is_active=1', 'ORDER BY' => 'p.id'));
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $countries[$row['id']][$row[$codeName]] = $row['title'];
             }
         }
 

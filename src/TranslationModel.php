@@ -77,7 +77,7 @@ class TranslationModel extends MultiModel
         return $names;
     }
     
-    public function retrieve(string $code = null) : array
+    public function retrieve(?string $code = null) : array
     {
         $codeName = $this->getCodeColumn()->getName();
         
