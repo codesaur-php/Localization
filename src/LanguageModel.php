@@ -13,12 +13,6 @@ class LanguageModel extends Model
     {
         parent::__construct($pdo);
         
-        $account_table = getenv('CODESAUR_ACCOUNT_TABLE', true);
-        if (!$account_table) {
-            $account_table = 'rbac_accounts';
-            $this->exec('set foreign_key_checks=0');
-        }
-        
         $this->setColumns(array(
            (new Column('id', 'bigint', 20))->auto()->primary()->unique()->notNull(),
             new Column('app', 'varchar', 128, 'common'),
@@ -28,9 +22,7 @@ class LanguageModel extends Model
             new Column('is_default', 'tinyint', 1, 0),
             new Column('is_active', 'tinyint', 1, 1),
             new Column('created_at', 'datetime'),
-           (new Column('created_by', 'bigint', 20))->foreignKey("$account_table(id) ON UPDATE CASCADE"),
-            new Column('updated_at', 'datetime'),
-           (new Column('updated_by', 'bigint', 20))->foreignKey("$account_table(id) ON UPDATE CASCADE")
+            new Column('updated_at', 'datetime')
         ));
         
         $this->setTable('language');
@@ -39,9 +31,8 @@ class LanguageModel extends Model
     public function retrieve(string $app = 'common', int $is_active = 1)
     {
         $stmt = $this->select('*', array(
-            'WHERE' => 'app=:app AND is_active=:is_active',
-            'ORDER BY' => 'is_default Desc',
-            'VALUES' => array('app' => $app, 'is_active' => $is_active)
+            'WHERE' => 'app=:1 AND is_active=:2', 'ORDER BY' => 'is_default Desc',
+            'PARAM' => array(':1' => $app, ':2' => ['value' => $is_active, 'data_type' => PDO::PARAM_INT])
         ));
         
         $languages = array();
@@ -54,17 +45,14 @@ class LanguageModel extends Model
 
     public function getByCode(string $code, string $app = 'common', int $is_active = 1)
     {
-         $stmt = $this->select('*', array(
-            'WHERE' => 'app=:app AND code=:code AND is_active=:is_active',
-            'ORDER BY' => 'is_default Desc', 'LIMIT' => 1,
-            'VALUES' => array('app' => $app, 'code' => $code, 'is_active' => $is_active)
-        ));
-         
-         if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-        
-        return null;
+        return $this->getRowBy(
+                array(
+                    'code' => $code,
+                    'app' => $app,
+                    'is_active' => $is_active
+                ),
+                'is_default Desc'
+        );
     }
 
     function __initial()

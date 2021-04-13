@@ -13,20 +13,12 @@ class CountriesModel extends MultiModel
     {
         parent::__construct($pdo);
         
-        $account_table = getenv('CODESAUR_ACCOUNT_TABLE', true);
-        if (!$account_table) {
-            $account_table = 'rbac_accounts';
-            $this->exec('set foreign_key_checks=0');
-        }
-        
         $this->setColumns(array(
            (new Column('id', 'varchar', 19))->primary()->unique()->notNull(),
             new Column('speak', 'varchar', 32),
             new Column('is_active', 'tinyint', 1, 1),
             new Column('created_at', 'datetime'),
-           (new Column('created_by', 'bigint', 20))->foreignKey("$account_table(id) ON UPDATE CASCADE"),
-            new Column('updated_at', 'datetime'),
-           (new Column('updated_by', 'bigint', 20))->foreignKey("$account_table(id) ON UPDATE CASCADE")
+            new Column('updated_at', 'datetime')
         ));
         
         $this->setContentColumns(array(
@@ -52,7 +44,7 @@ class CountriesModel extends MultiModel
         } else {
             $code = preg_replace('/[^A-Za-z]/', '', $code);
             $stmt = $this->select("p.id as id, c.$codeName as $codeName, c.title as title", array(
-                'WHERE' => "c.$codeName=:$codeName AND p.is_active=1", 'ORDER BY' => 'p.id', 'VALUES' => [$codeName => $code]
+                'WHERE' => "c.$codeName=:1 AND p.is_active=1", 'ORDER BY' => 'p.id', 'PARAM' => [':1' => $code]
             ));            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $countries[$row['id']] = $row['title'];
