@@ -30,12 +30,14 @@ class LanguageModel extends Model
     
     public function retrieve(string $app = 'common', int $is_active = 1)
     {
-        $stmt = $this->select('*', array(
-            'WHERE' => 'app=:1 AND is_active=:2', 'ORDER BY' => 'is_default Desc',
-            'PARAM' => array(':1' => $app, ':2' => ['value' => $is_active, 'data_type' => PDO::PARAM_INT])
-        ));
+        $condition = array(
+            'WHERE' => 'app=:1 AND is_active=:2',
+            'ORDER BY' => 'is_default Desc',
+            'PARAM' => array(':1' => $app, ':2' => $is_active)
+        );
         
         $languages = array();
+        $stmt = $this->select('*', $condition);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $languages[$row['code']] = $row['full'];
         }

@@ -43,9 +43,12 @@ class CountriesModel extends MultiModel
             }
         } else {
             $code = preg_replace('/[^A-Za-z]/', '', $code);
-            $stmt = $this->select("p.id as id, c.$codeName as $codeName, c.title as title", array(
-                'WHERE' => "c.$codeName=:1 AND p.is_active=1", 'ORDER BY' => 'p.id', 'PARAM' => [':1' => $code]
-            ));            
+            $condition = array(
+                'WHERE' => "c.$codeName=:1 AND p.is_active=1",
+                'ORDER BY' => 'p.id',
+                'PARAM' => array(':1' => $code)
+            );
+            $stmt = $this->select("p.id as id, c.$codeName as $codeName, c.title as title", $condition);            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $countries[$row['id']] = $row['title'];
             }

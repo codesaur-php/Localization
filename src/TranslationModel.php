@@ -83,9 +83,12 @@ class TranslationModel extends MultiModel
             }
         } else {            
             $code = preg_replace('/[^A-Za-z]/', '', $code);
-            $stmt = $this->select('p.keyword as keyword, c.title as title', array(
-                'WHERE' => "c.$codeName=:1 AND p.is_active=1", 'ORDER BY' => 'p.keyword', 'PARAM' => [':1' => $code]
-            ));
+            $condition = array(
+                'WHERE' => "c.$codeName=:1 AND p.is_active=1",
+                'ORDER BY' => 'p.keyword',
+                'PARAM' => array(':1' => $code)
+            );
+            $stmt = $this->select('p.keyword as keyword, c.title as title', $condition);
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $text[$row['keyword']] = $row['title'];
             }
