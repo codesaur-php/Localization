@@ -59,8 +59,8 @@ class LanguageModel extends Model
     {
         $table = $this->getName();
         $nowdate = date('Y-m-d H:i:s');
-        $query =  "INSERT INTO $table (created_at, code, full, app, is_default)"
-                . " VALUES ('$nowdate', 'mn', 'Монгол', 'common', 1), ('$nowdate', 'en', 'English', 'common', 0)";
+        $query =  "INSERT INTO $table(created_at, code, full, app, is_default)"
+                . " VALUES('$nowdate', 'mn', 'Монгол', 'common', 1),('$nowdate', 'en', 'English', 'common', 0)";
 
         $this->exec($query);
     }
