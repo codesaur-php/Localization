@@ -32,7 +32,7 @@ try {
 
     $pdo->exec("USE $database");
     echo 'started using example database!<br/>';
-
+    
     $language = new LanguageModel($pdo);
     var_dump($language->retrieve(), $language->getByCode('mn'));
 

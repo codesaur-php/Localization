@@ -9,20 +9,33 @@ use codesaur\DataObject\MultiModel;
 
 class CountriesModel extends MultiModel
 {
-    function __construct(PDO $pdo)
+    function __construct(PDO $pdo, $accountForeignRef = null)
     {
         parent::__construct($pdo);
+        
+        $created_by = new Column('created_by', 'bigint', 20);
+        $updated_by = new Column('updated_by', 'bigint', 20);
+        if (!empty($accountForeignRef)) {
+            if (is_array($accountForeignRef)) {
+                call_user_func_array(array($created_by, 'foreignKey'), $accountForeignRef);
+                call_user_func_array(array($updated_by, 'foreignKey'), $accountForeignRef);
+            } else {
+                $created_by->foreignKey($accountForeignRef, 'id');
+                $updated_by->foreignKey($accountForeignRef, 'id');
+            }
+        }
         
         $this->setColumns(array(
            (new Column('id', 'varchar', 19))->primary()->unique()->notNull(),
             new Column('speak', 'varchar', 32),
             new Column('is_active', 'tinyint', 1, 1),
             new Column('created_at', 'datetime'),
-            new Column('updated_at', 'datetime')
+            $created_by,
+            new Column('updated_at', 'datetime'),
+            $updated_by
         ));
         
         $this->setContentColumns(array(
-           (new Column('parent_id', 'varchar', 19))->notNull(),
             new Column('title', 'varchar', 255)
         ));
         
@@ -59,6 +72,8 @@ class CountriesModel extends MultiModel
     
     function __initial()
     {
+        $this->setForeignKeyChecks(false);
+        
         $this->insert(array('id' => 'AD', 'speak' => 'Català'), array('mn' => array('title' => 'Андорра'), 'en' => array('title' => 'Andorra')));
         $this->insert(array('id' => 'AE', 'speak' => 'الإمارات العربية المتحدة'), array('en' => array('title' => 'United Arab Emirates'), 'mn' => array('title' => 'Арабын Нэгдсэн Эмират')));
         $this->insert(array('id' => 'AF', 'speak' => 'د افغانستان اسلامي جمهوریت'), array('en' => array('title' => 'Afghanistan'), 'mn' => array('title' => 'Афганистан')));
@@ -294,5 +309,7 @@ class CountriesModel extends MultiModel
         $this->insert(array('id' => 'ZA', 'speak' => ''), array('mn' => array('title' => 'Өмнөд Африк'), 'en' => array('title' => 'South Africa')));
         $this->insert(array('id' => 'ZM', 'speak' => ''), array('en' => array('title' => 'Zambia'), 'mn' => array('title' => 'Замби')));
         $this->insert(array('id' => 'ZW', 'speak' => ''), array('mn' => array('title' => 'Зинбабве'), 'en' => array('title' => 'Zimbabwe')));
+        
+        $this->setForeignKeyChecks();
     }
 }
