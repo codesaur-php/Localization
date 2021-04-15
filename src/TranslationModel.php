@@ -64,28 +64,6 @@ class TranslationModel extends MultiModel
         
         parent::setTable("translation_$name", $collate);
     }
-
-    public function getNames(): array
-    {
-        $database = $this->databaseName();
-        $namelike = $this->quote('translation_%');
-        $pdostmt = $this->prepare("SHOW TABLES FROM $database LIKE $namelike");
-        $pdostmt->execute();
-        
-        $likeness = array();
-        while ($rows = $pdostmt->fetch(PDO::FETCH_ASSOC)) {
-            $likeness[] = current($rows);
-        }
-        
-        $names = array();
-        foreach ($likeness as $name) {
-            if (in_array($name . '_content', $likeness)) {
-                $names[] = substr($name, strlen('translation_'));
-            }
-        }
-        
-        return $names;
-    }
     
     public function retrieve(?string $code = null) : array
     {
@@ -113,39 +91,5 @@ class TranslationModel extends MultiModel
         }
 
         return $text;
-    }
-    
-    public function findKeyword(string $keyword)
-    {
-        $keywordColumn = $this->getColumn('keyword');
-
-        $stmt_content_tables = $this->prepare(
-                'SHOW TABLES FROM ' . $this->databaseName()
-                . ' LIKE ' . $this->quote('translation_%_content'));
-        $stmt_content_tables->execute();
-        
-        while ($name = $stmt_content_tables->fetch(PDO::FETCH_NUM)) {
-            $table = substr($name[0], 0, strlen($name[0]) - strlen('_content'));
-            $pdostmt = $this->prepare("SELECT * FROM $table WHERE {$keywordColumn->getName()}=:1");
-            $pdostmt->bindParam(':1', $keyword, $keywordColumn->getDataType(), $keywordColumn->getLength());
-            $pdostmt->execute();
-            
-            if ($pdostmt->rowCount() === 1) {
-                $result = array('table' => $table);
-                $result += $pdostmt->fetch(PDO::FETCH_ASSOC);                
-                foreach ($this->getColumns() as $column) {
-                    if (isset($result[$column->getName()])) {
-                        if ($column->isInt()) {
-                            $result[$column->getName()] = (int)$result[$column->getName()];
-                        } elseif ($column->getType() == 'decimal') {
-                            $result[$column->getName()] = (float)$result[$column->getName()];
-                        }
-                    }
-                }                
-                return $result;
-            }
-        }
-        
-        return null;
     }
 }

@@ -44,7 +44,6 @@ try {
     $default_translations = $translation->retrieve();
     $translation->setTable('dashboard');
     $dashboard_translations_en = $translation->retrieve('en');
-    var_dump($translation->getNames(), $translation->findKeyword('address'));
     var_dump($default_translations, $dashboard_translations_en);
 } catch (Exception $ex) {
     die('[' . date('Y-m-d H:i:s') . ' Error] ' . $ex->getMessage());
