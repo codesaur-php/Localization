@@ -9,9 +9,21 @@ use codesaur\DataObject\Column;
 
 class LanguageModel extends Model
 {
-    function __construct(PDO $pdo)
+    function __construct(PDO $pdo, $accountForeignRef = null)
     {
         parent::__construct($pdo);
+        
+        $created_by = new Column('created_by', 'bigint', 20);
+        $updated_by = new Column('updated_by', 'bigint', 20);
+        if (!empty($accountForeignRef)) {
+            if (is_array($accountForeignRef)) {
+                call_user_func_array(array($created_by, 'foreignKey'), $accountForeignRef);
+                call_user_func_array(array($updated_by, 'foreignKey'), $accountForeignRef);
+            } else {
+                $created_by->foreignKey($accountForeignRef, 'id');
+                $updated_by->foreignKey($accountForeignRef, 'id');
+            }
+        }
         
         $this->setColumns(array(
            (new Column('id', 'bigint', 20))->auto()->primary()->unique()->notNull(),
@@ -22,7 +34,9 @@ class LanguageModel extends Model
             new Column('is_default', 'tinyint', 1, 0),
             new Column('is_active', 'tinyint', 1, 1),
             new Column('created_at', 'datetime'),
-            new Column('updated_at', 'datetime')
+            $created_by,
+            new Column('updated_at', 'datetime'),
+            $updated_by
         ));
         
         $this->setTable('language');
