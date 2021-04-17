@@ -39,7 +39,7 @@ class LanguageModel extends Model
             $updated_by
         ));
         
-        $this->setTable('language');
+        $this->setTable('language', 'utf8_unicode_ci');
     }
     
     public function retrieve(string $app = 'common', int $is_active = 1)

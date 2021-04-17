@@ -40,9 +40,9 @@ try {
     var_dump($countries->retrieve(), $countries->retrieve('en'), $countries->getById('MN'), $countries->getById('US', 'mn'));
 
     $translation = new TranslationModel($pdo);
-    $translation->setTable('default');
+    $translation->setTable('default', 'utf8_unicode_ci');
     $default_translations = $translation->retrieve();
-    $translation->setTable('dashboard');
+    $translation->setTable('dashboard', 'utf8_unicode_ci');
     $dashboard_translations_en = $translation->retrieve('en');
     var_dump($default_translations, $dashboard_translations_en);
 } catch (Exception $ex) {

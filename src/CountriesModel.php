@@ -39,7 +39,7 @@ class CountriesModel extends MultiModel
             new Column('title', 'varchar', 255)
         ));
         
-        $this->setTable('countries');
+        $this->setTable('countries', 'utf8_unicode_ci');
     }
     
     public function retrieve(?string $code = null): array
