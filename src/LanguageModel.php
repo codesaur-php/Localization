@@ -27,9 +27,9 @@ class LanguageModel extends Model
         
         $this->setColumns(array(
            (new Column('id', 'bigint', 20))->auto()->primary()->unique()->notNull(),
-            new Column('app', 'varchar', 128, 'common'),
+            new Column('app', 'varchar', 64, 'common'),
             new Column('code', 'varchar', 6),
-            new Column('full', 'varchar', 64),
+            new Column('full', 'varchar', 128),
             new Column('description', 'text'),
             new Column('is_default', 'tinyint', 1, 0),
             new Column('is_active', 'tinyint', 1, 1),
