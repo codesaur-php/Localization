@@ -43,10 +43,9 @@ class CountriesModel extends MultiModel
     }
     
     public function retrieve(?string $code = null): array
-    {
-        $codeName = $this->getCodeColumn()->getName();
-        
+    {        
         $countries = array();
+        $codeName = $this->getCodeColumn()->getName();
         if (empty($code)) {
             $stmt = $this->select(
                     "p.id as id, c.$codeName as $codeName, c.title as title",
@@ -66,7 +65,6 @@ class CountriesModel extends MultiModel
                 $countries[$row['id']] = $row['title'];
             }
         }
-
         return $countries;
     }
     

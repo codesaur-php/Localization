@@ -49,10 +49,8 @@ class TranslationModel extends MultiModel
             return;
         }
         
-        $this->setForeignKeyChecks(false);
-        
-        TranslationInitial::$method($this);
-        
+        $this->setForeignKeyChecks(false);        
+        TranslationInitial::$method($this);        
         $this->setForeignKeyChecks();
     }
     
@@ -67,9 +65,8 @@ class TranslationModel extends MultiModel
     
     public function retrieve(?string $code = null) : array
     {
-        $codeName = $this->getCodeColumn()->getName();
-        
         $text = array();
+        $codeName = $this->getCodeColumn()->getName();
         if (empty($code)) {
             $stmt = $this->select(
                     "p.keyword as keyword, c.$codeName as $codeName, c.title as title",
@@ -89,7 +86,6 @@ class TranslationModel extends MultiModel
                 $text[$row['keyword']] = $row['title'];
             }
         }
-
         return $text;
     }
 }
