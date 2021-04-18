@@ -36,7 +36,7 @@ try {
     }
 
     $pdo->exec("USE $database");
-    echo "starting to use database [$database]!<br/>";
+    echo "starting to use database [$database]<br/>";
     
     $language = new LanguageModel($pdo);
     var_dump($language->retrieve(), $language->getByCode('mn'));
