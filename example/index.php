@@ -31,7 +31,7 @@ try {
     }
 
     $pdo->exec("USE $database");
-    echo 'started using example database!<br/>';
+    echo "starting to use database [$database]!<br/>";
     
     $language = new LanguageModel($pdo);
     var_dump($language->retrieve(), $language->getByCode('mn'));
@@ -46,5 +46,5 @@ try {
     $dashboard_translations_en = $translation->retrieve('en');
     var_dump($default_translations, $dashboard_translations_en);
 } catch (Exception $ex) {
-    die('[' . date('Y-m-d H:i:s') . ' Error] ' . $ex->getMessage());
+    die('<br />{' . date('Y-m-d H:i:s') . '} Error[' . $ex->getCode() . '] => ' . $ex->getMessage());
 }
