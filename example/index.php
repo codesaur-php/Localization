@@ -1,11 +1,16 @@
 <?php
 
+namespace codesaur\Localization\Example;
+
 /* DEV: v1.2021.03.25
  * 
  * This is an example script!
  */
 
 require_once '../vendor/autoload.php';
+
+use PDO;
+use Exception;
 
 use codesaur\Localization\LanguageModel;
 use codesaur\Localization\CountriesModel;
