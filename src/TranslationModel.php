@@ -57,7 +57,7 @@ class TranslationModel extends MultiModel
     public function setTable(string $name, $collate = null)
     {
         if (empty($name)) {
-            throw new Exception(__CLASS__ . ': Table name must be provided!', 1103);
+            throw new Exception(__CLASS__ . ': Table name must be provided', 1103);
         }
         
         parent::setTable("translation_$name", $collate);
